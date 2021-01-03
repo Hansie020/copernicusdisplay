@@ -1,13 +1,14 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-import sys
-import sys
-sys.pathinsert(1, "./lib") # Adds lib folder in this directory to sys
+#import sys
+#sys.path.insert(1, "~pi/lib") # Adds lib folder in this directory to sys
 
 import logging
-from waveshare_epd import epd2in7b_V2
+import epd2in7b_V2
 from PIL import Image,ImageDraw,ImageFont
 from gpiozero import Button
 from signal import pause
+import socket
 
 import requests
 import json
@@ -27,6 +28,9 @@ buttonPressed = 3
 lastRefreshTime = 0
 timeXpos = 170
 timeYpos = 159
+ipXpos = 10
+ipYpos = 159
+ipv4_address = ""
 
 key1 = Button(5) #set key1
 key2 = Button(6) #set key2
@@ -48,6 +52,7 @@ def printToDisplay3lines(string1, string2, string3):
     draw.text((25, 78), string2, font = font1, fill = 255)
     draw.text((25, 127), string3, font = font1, fill = 255)
     draw.text((timeXpos, timeYpos), lastRefreshTime, font = font2, fill = 255)
+    draw.text((ipXpos, ipYpos), ipv4_address, font = font2, fill = 255)
 
     epd.display(epd.getbuffer(HRedImage), epd.getbuffer(HRedImage))
 
@@ -62,7 +67,8 @@ def printToDisplay2lines(string1, string2):
     draw.text((25, 46), string1, font = font1, fill = 255)
     draw.text((25, 112), string2, font = font1, fill = 255)
     draw.text((timeXpos, timeYpos), lastRefreshTime, font = font2, fill = 255)
-
+    draw.text((ipXpos, ipYpos), ipv4_address, font = font2, fill = 255)
+    
     epd.display(epd.getbuffer(HRedImage), epd.getbuffer(HRedImage))
 
 
@@ -83,6 +89,20 @@ def handleKey3Press():
     print('Key3 pressed')
     printToDisplay3lines('ETH value: '+eth_amount,'USD value: $'+usd_amount, 'EUR value: €'+eur_amount)
     buttonPressed = 3
+    
+def getIPv4():
+    global ipv4_address
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # doesn't even have to be reachable
+        s.connect(('10.255.255.255', 1))
+        IP = s.getsockname()[0]
+    except Exception:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    ipv4_address = IP
 
 def refreshValues():
     global eth_amount
@@ -120,6 +140,7 @@ key2.when_pressed = handleKey2Press
 key3.when_pressed = handleKey3Press
 key4.when_pressed = refreshValues
 
+getIPv4()
 refreshValues()
 
 pause()
