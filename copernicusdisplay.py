@@ -1,10 +1,7 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-import sys
-import os
-picdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'python/pic')
-libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
-if os.path.exists(libdir):
-    sys.path.append(libdir)
+import sys
+sys.pathinsert(1, "./lib") # Adds lib folder in this directory to sys
 
 import logging
 from waveshare_epd import epd2in7b_V2
