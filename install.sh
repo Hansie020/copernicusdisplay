@@ -3,9 +3,9 @@
 # waveshare 2.7inch e-Paper HAT V2
 # up and running for displaying the Copernicus wallet value
 
-cd ~
-mkdir isitcopernicus
-cd isitcopernicus
+#cd ~
+#mkdir isitcopernicus
+#cd isitcopernicus
 
 #install BCM2835 libraries
 wget http://www.airspayce.com/mikem/bcm2835/bcm2835-1.60.tar.gz
