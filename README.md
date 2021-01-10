@@ -20,6 +20,6 @@ The display should blink and shows three lines of text depicting the value of th
 When the display shows the correct data, you can install copernicusdisplay as a systemd service using the following commands:
 ```
     sudo cp copernicusdisplay.service /etc/systemd/system
-    cd /etc/systemd/system
     sudo systemctl enable copernicusdisplay.service
+    sudo systemctl start copernicusdisplay
 ```
