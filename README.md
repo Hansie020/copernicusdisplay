@@ -23,3 +23,4 @@ When the display shows the correct data, you can install copernicusdisplay as a 
     sudo systemctl enable copernicusdisplay.service
     sudo systemctl start copernicusdisplay
 ```
+The raspberry pi will update itself with the latest version of the master branch at boottime.

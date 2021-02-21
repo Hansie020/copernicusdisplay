@@ -4,7 +4,7 @@ After=multi-user.target,network.target
 
 [Service]
 Type=idle
-ExecStart=/usr/bin/python3 /home/pi/copernicusdisplay/copernicusdisplay.py
+ExecStart=/bin/bash /home/pi/copernicusdisplay/updater.sh
 
 [Install]
 WantedBy=multi-user.target
