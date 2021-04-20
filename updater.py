@@ -72,8 +72,13 @@ ipv4_address = ""
 #sleep 30 secs before starting to wait for network connectivity
 printToDisplayNextLine(1,'Searching for network')
 getIPv4()
-print("Ready, network found")
+while (ipv4_address == '127.0.0.1'):
+    print("Network not found, retry")
+    printToDisplayNextLine(2,'Network not found, retrying.')
+    getIPv4()    
+else:
+    print("Ready, network found")
+    printToDisplayNextLine(2,'Network found at '+ ipv4_address)
+    printToDisplayNextLine(3,'Performing updates')
 
-printToDisplayNextLine(2,'Network found at '+ ipv4_address)
-printToDisplayNextLine(3,'Performing updates')
 
