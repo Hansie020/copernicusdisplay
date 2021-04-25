@@ -13,7 +13,6 @@ import time
 
 import requests
 import json
-import time
 import os
 
 
@@ -52,7 +51,17 @@ def printToDisplay2lines(string1, string2):
 def handleKey1Press():
     #Display QR code for donation
     global buttonPressed
+    global times_key1_pressed
     print('Key1 pressed')
+    if (times_key1_pressed == 4):
+        #shutdown gracefully
+        print('Time to shut down')
+        os.system("sudo shutdown -h now")
+        exit(0)
+    else:
+        times_key1_pressed = times_key1_pressed + 1
+        
+    #Now display the QR code
     HBlackImage = Image.new('1', (epd2in7.EPD_HEIGHT, epd2in7.EPD_WIDTH), 255)  # 298*126
     draw = ImageDraw.Draw(HBlackImage) # Create draw object and pass in the image layer we want to work with (HBlackImage)
     font2 = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeSans.ttf', 11) # Create our font, passing in the font file and font size
@@ -70,6 +79,9 @@ def handleKey1Press():
 def handleKey2Press():
     #Display ETH and EUR values
     global buttonPressed
+    global times_key1_pressed
+    times_key1_pressed = 0
+    
     print('Key2 pressed')
     printToDisplay2lines('ETH value: '+eth_amount,'EUR value: €'+eur_amount)
     buttonPressed = 2
@@ -77,9 +89,13 @@ def handleKey2Press():
 def handleKey3Press():
     #Display ETH, USD and EUR values
     global buttonPressed
+    global times_key1_pressed
+    times_key1_pressed = 0
+    
     print('Key3 pressed')
     printToDisplay3lines('ETH value: '+eth_amount,'USD value: $'+usd_amount, 'EUR value: €'+eur_amount)
     buttonPressed = 3
+    times_key1_pressed = 0
     
 def getIPv4():
     global ipv4_address
@@ -101,6 +117,10 @@ def refreshValues():
     global eur_amount
     global buttonPressed
     global lastRefreshTime
+    global times_key1_pressed
+    
+#reset times key1_pressed
+    times_key1_pressed = 0
    
     #call the api for the Copernicus Value
     response = requests.get('http://isitcopernicus.art:3000/api/v1.0/price')
@@ -121,13 +141,12 @@ def refreshValues():
     #redisplay the same screen content
     if (buttonPressed == 1):
         print('refresh key 1')
-        handleKey1Press()
     elif (buttonPressed == 2):
         print('refresh key 2')
         handleKey2Press()
     elif (buttonPressed == 3):
         print('refresh key 3')
-        handleKey3Press()
+        handleKey3Press() 
 
 #initialize
 logging.basicConfig(level=logging.DEBUG)
@@ -148,6 +167,7 @@ timeYpos = 159
 ipXpos = 10
 ipYpos = 159
 ipv4_address = ""
+times_key1_pressed = 0
 
 #Assign buttos to gpio pins
 key1 = Button(5) #set key1
